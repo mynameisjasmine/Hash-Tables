@@ -7,6 +7,9 @@ class HashTableEntry:
         self.key = key
         self.value = value
         self.next = None
+        
+
+    
 
 
 class HashTable:
@@ -15,7 +18,11 @@ class HashTable:
     that accepts string keys
 
     Implement this.
+    
     """
+    def __init__(self, capacity):
+        self.capacity = capacity
+        self.storage = [None] * capacity
 
     def fnv1(self, key):
         """
@@ -30,6 +37,17 @@ class HashTable:
 
         Implement this, and/or FNV-1.
         """
+        hash = 5381
+        coded = key.encode()
+        for i in coded:
+            hash = (( hash << 5) + hash) + i
+        
+        return hash
+        
+
+        
+        
+        
 
     def hash_index(self, key):
         """
@@ -48,6 +66,32 @@ class HashTable:
         Implement this.
         """
 
+
+        #creating a new node with key/value pair
+        new_entry = HashTableEntry(key, value)
+        
+        index = self.hash_index(key)
+        
+        if self.storage[index] is not None:
+            if self.storage[index].key == key:
+                self.storage[index] = new_entry
+                return
+            current_node = self.storage[index]
+
+            while current_node.next is not None:
+                if current_node.key == key:
+                    current_node = new_entry
+                current_node = current_node.next
+            current_node.next = new_entry
+
+        else:
+            self.storage[index] = new_entry
+
+
+
+
+
+
     def delete(self, key):
         """
         Remove the value stored with the given key.
@@ -56,6 +100,24 @@ class HashTable:
 
         Implement this.
         """
+        index = self.hash_index(key)
+        if self.storage[index] is not None:
+            if self.storage[index].key == key:
+                self.storage[index] = None
+            else:
+                current = self.storage[index]
+                while current.next is not None:
+                    if current.key == key:
+                       current = None
+                    current = current.next
+
+                  
+        else: 
+            print(f"Error: {key} not found ")
+
+
+
+
 
     def get(self, key):
         """
@@ -65,8 +127,24 @@ class HashTable:
 
         Implement this.
         """
+        index = self.hash_index(key)
+        
+        if self.storage[index]:
+            if self.storage[index].key == key:
+                return self.storage[index].value
+            
+            else:
+                current_index = self.storage[index]
+                while current_index is not None:
+                    if current_index.key == key:
+                        return current_index.value
+                    current_index = current_index.next
+        else:
+            return None
 
-    def resize(self):
+
+
+    def resize(self, new_capacity):
         """
         Doubles the capacity of the hash table and
         rehash all key/value pairs.
