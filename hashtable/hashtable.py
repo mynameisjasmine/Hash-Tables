@@ -166,7 +166,7 @@ if __name__ == "__main__":
     print(ht.get("line_2"))
     print(ht.get("line_3"))
 
-    # Test resizing
+    # Test resizing.
     old_capacity = len(ht.storage)
     ht.resize()
     new_capacity = len(ht.storage)
