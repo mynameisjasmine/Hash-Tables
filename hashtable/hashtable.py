@@ -144,13 +144,58 @@ class HashTable:
 
 
 
-    def resize(self, new_capacity):
+    def resize(self):
         """
         Doubles the capacity of the hash table and
         rehash all key/value pairs.
 
         Implement this.
         """
+        
+        self.capacity *= 2
+        table = HashTable(self.capacity)
+
+        for i in self.storage:
+            if i is not None:
+                table.put(i.key, i.value)
+                
+                while i.next is not None:
+                    table.put(i.next.key, i.next.value)
+                    i.next = i.next.next
+        self.storage = table.storage
+
+    def load_resize(self):
+
+        count = 0
+        div = count / self.capacity
+
+        for i in self.storage:
+            if i:
+                count += 1
+            if div > 0.7:
+                self.resize()
+
+
+        
+        
+        # storing the original array
+        # previous_table = self.storage
+        # Doubling the size of the capacity
+        # self.capacity *= 2
+        # self.storage = [None] * self.capacity
+
+        
+        # for i in previous_table:
+        #     if i is None:
+        #        pass
+        #     elif i.next is None:
+        #          self.put(i.key, i.value)
+            
+        #     else:
+        #         curr = i
+        #         while curr is not None:
+        #             self.put(curr.key, curr.value)
+        #             curr = curr.next
 
 if __name__ == "__main__":
     ht = HashTable(2)
